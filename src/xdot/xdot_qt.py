@@ -1340,7 +1340,7 @@ class DotWidget(QWidget):
     """Qt widget that draws dot graphs."""
 
     filter = 'dot'
-    trigger = pyqtSignal()
+    trigger = pyqtSignal(str,str,QMouseEvent)
 
 
     def __init__(self,  parent=None):
@@ -1638,9 +1638,9 @@ class DotWidget(QWidget):
             x, y = event.x(), event.y()
             url = self.get_url(x, y)
             if url is not None:
-                self.trigger.emit(SIGNAL("clicked"), unicode(url.url), event)
+                self.trigger.emit("clicked", unicode(url.url), event)
             else:
-                self.trigger.emit(SIGNAL("clicked"), 'none', event)
+                self.trigger.emit("clicked", 'none', event)
                 jump = self.get_jump(x, y)
                 if jump is not None:
                     self.animate_to(jump.x, jump.y)
@@ -1651,9 +1651,9 @@ class DotWidget(QWidget):
             x, y = event.x(), event.y()
             url = self.get_url(x, y)
             if url is not None:
-                self.trigger.emit(SIGNAL("right_clicked"), unicode(url.url), event)
+                self.trigger.emit("right_clicked", unicode(url.url), event)
             else:
-                self.trigger.emit(SIGNAL("right_clicked"), 'none', event)
+                self.trigger.emit("right_clicked", 'none', event)
                 jump = self.get_jump(x, y)
                 if jump is not None:
                     self.animate_to(jump.x, jump.y)
@@ -1666,10 +1666,10 @@ class DotWidget(QWidget):
         return False
 
     def wheelEvent(self, event):
-        if event.delta() > 0:
+        if event.angleDelta().y() > 0:
             self.zoom_image(self.zoom_ratio * self.ZOOM_INCREMENT,
                             pos=(event.x(), event.y()))
-        if event.delta() < 0:
+        if event.angleDelta().y() < 0:
             self.zoom_image(self.zoom_ratio / self.ZOOM_INCREMENT,
                             pos=(event.x(), event.y()))
 

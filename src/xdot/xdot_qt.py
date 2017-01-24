@@ -33,13 +33,15 @@ import re
 
 #from PySide.QtCore import *
 #from PySide.QtGui import *
-from PyQt4 import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5 import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
+from PyQt5.QtCore import Signal
+from python_qt_binding.QtWidgets import QWidget, QMainWindow
 #from python_qt_binding import  *
-#from python_qt_binding.QtCore import  *
-#from python_qt_binding.QtGui import  *
+#from python_qt_binding.QtCore import QMainWindow
+#from python_qt_binding.QtGui import *
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #-- Drawing Classes --#
@@ -1338,6 +1340,8 @@ class DotWidget(QWidget):
     """Qt widget that draws dot graphs."""
 
     filter = 'dot'
+    trigger = pyqtSignal()
+
 
     def __init__(self,  parent=None):
         super(DotWidget,  self).__init__(parent)
@@ -1634,9 +1638,9 @@ class DotWidget(QWidget):
             x, y = event.x(), event.y()
             url = self.get_url(x, y)
             if url is not None:
-                self.emit(SIGNAL("clicked"), unicode(url.url), event)
+                self.trigger.emit(SIGNAL("clicked"), unicode(url.url), event)
             else:
-                self.emit(SIGNAL("clicked"), 'none', event)
+                self.trigger.emit(SIGNAL("clicked"), 'none', event)
                 jump = self.get_jump(x, y)
                 if jump is not None:
                     self.animate_to(jump.x, jump.y)
@@ -1647,9 +1651,9 @@ class DotWidget(QWidget):
             x, y = event.x(), event.y()
             url = self.get_url(x, y)
             if url is not None:
-                self.emit(SIGNAL("right_clicked"), unicode(url.url), event)
+                self.trigger.emit(SIGNAL("right_clicked"), unicode(url.url), event)
             else:
-                self.emit(SIGNAL("right_clicked"), 'none', event)
+                self.trigger.emit(SIGNAL("right_clicked"), 'none', event)
                 jump = self.get_jump(x, y)
                 if jump is not None:
                     self.animate_to(jump.x, jump.y)
